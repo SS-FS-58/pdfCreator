@@ -104,7 +104,10 @@ class Bot():
             TTFont('altehaasgroteskbold', 'fonts/altehaasgroteskbold.ttf'))
         pdfmetrics.registerFont(
             TTFont('altehaasgrotesk', 'fonts/altehaasgroteskregular.ttf'))
-
+        pdfmetrics.registerFont(
+            TTFont('helvari', 'fonts/helvari.ttf'))
+        pdfmetrics.registerFont(
+            TTFont('mytupi', 'fonts/mytupi.ttf'))
         can.line(xPositions[0], height, 482, height)
         can.setFont("altehaasgroteskbold", 8)
         can.drawString(xPositions[0]+1, height+3, "Analyte")
@@ -118,7 +121,7 @@ class Bot():
             height -= height_gap
             can.setStrokeColorRGB(0.8, 0.8, 0.8)
             can.line(xPositions[0], height, 482, height)
-            can.setFont("altehaasgrotesk", 8)
+            can.setFont("mytupi", 7)
             if titleList.index(title) == 0:
                 can.setFillColorRGB(0.8, 0.8, 0.8)
                 can.drawString(xPositions[1], height+3, "%")
@@ -134,7 +137,7 @@ class Bot():
                 can.drawString(xPositions[2], height+3, correctValue[1])
                 can.drawString(xPositions[3], height+3, correctValue[2])
             else:
-                can.setFont("altehaasgroteskbold", 8)
+                can.setFont("altehaasgroteskbold", 7)
                 correctValue = self.getCorrectData(title, 'total')
                 can.drawString(xPositions[0]+1, height+3, title)
                 can.setFillColorRGB(0, 0, 0)
@@ -173,7 +176,7 @@ class Bot():
                 returnList[1] = str(round(float(correct_data[2]), 3))
                 if returnList[1] == '0.0':
                     returnList[1] = 'ND'
-                returnList[2] = str(round(float(correct_data[3]), 3))
+                returnList[2] = str(round(float(correct_data[2]*10), 2))
                 if returnList[2] == '0.0':
                     returnList[2] = 'ND'
 
