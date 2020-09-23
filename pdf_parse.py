@@ -39,20 +39,42 @@ class Bot():
         print('Bot initing!')
         self.correct_data_file = data['correct_data_file']
         self.old_pdf_file = data['old_pdf_file']
-        self.read_correct_data()
-        self.read_old_pdf()
+        self.read_correct_data(data['correct_data_file'])
+        # self.read_old_pdf()
         self.create_new_pdf()
 
-    def read_correct_data(self):
-        print("read excel file")
-        df = pd.read_excel(
-            self.correct_data_file)
-        sub_df = df.iloc[10:23, [16, 32, 31, 20]]
-        self.correctData = sub_df.to_numpy()
-        print(self.correctData)
+    def read_correct_data(self, file_name):
+        print("Reading correct excel file:{}.".format(file_name))
+        try:
+            df = pd.read_excel(
+                file_name)
+            self.correct_data_file = file_name
+            sub_df = df.iloc[10:23, [16, 32, 31, 20]]
+            self.correctData = sub_df.to_numpy()
+            print('I read the {} file successfully'.format(file_name))
+            return True
+        except:
+            print('Sorry, I cannot read the {} file.'.format(file_name))
+            new_file_name = input(
+                "Please reenter the correct data excel file name:\n")
+            return self.read_correct_data(new_file_name)
 
-    def read_old_pdf(self):
-        print('read old pdf file')
+        # print(self.correctData)
+
+    def read_old_pdf(self, file_name):
+        print("Reading original Pdf file:{}.".format(file_name))
+        try:
+            pdfReader = PdfFileReader(
+                open(file_name, "rb"))
+            self.old_pdf_file = file_name
+            print('I read the {} file successfully'.format(file_name))
+            return pdfReader
+        except:
+            print('Sorry, I cannot read the {} file.'.format(file_name))
+            new_file_name = input(
+                "Please reenter the source pdf file name:\n")
+            return self.read_old_pdf(new_file_name)
+
         # tables = tabula.read_pdf(
         #     self.old_pdf_file, pages="all", multiple_tables=True)
         # tabula.convert_into(self.old_pdf_file, "iris_first_table.csv")
@@ -125,17 +147,17 @@ class Bot():
         packet.seek(0)
         new_pdf = PdfFileReader(packet)
         # read your existing PDF
-        existing_pdf = PdfFileReader(
-            open(old_pdf_file, "rb"))
+        existing_pdf = self.read_old_pdf(self.old_pdf_file)
         output = PdfFileWriter()
         # add the "watermark" (which is the new pdf) on the existing page
         page = existing_pdf.getPage(0)
         page.mergePage(new_pdf.getPage(0))
         output.addPage(page)
         # finally, write "output" to a real file
-        outputStream = open("destination.pdf", "wb")
+        outputStream = open("Updated_"+self.old_pdf_file, "wb")
         output.write(outputStream)
         outputStream.close()
+        print('Created new pdf file: ', "Updated_"+self.old_pdf_file)
 
     def getCorrectData(self, title, title_type='normal'):
         returnList = ['', '', '']
