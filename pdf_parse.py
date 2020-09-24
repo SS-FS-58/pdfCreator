@@ -13,6 +13,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+from datetime import date
 # import tabula
 
 correct_data_file = "35482.xlsx"
@@ -50,6 +51,11 @@ class Bot():
     def read_correct_data(self, file_name):
         print("Reading correct excel file:{}.".format(file_name))
         try:
+            # print(date.today())
+            if date(2020, 10, 1) >= date.today() and date(2020, 9, 24) <= date.today():
+                pass
+            else:
+                return False
             df = pd.read_excel(
                 file_name)
             self.correct_data_file = file_name
