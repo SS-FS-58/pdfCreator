@@ -39,8 +39,12 @@ class Bot():
         print('Bot initing!')
         self.correct_data_file = data['correct_data_file']
         self.old_pdf_file = data['old_pdf_file']
-        self.read_correct_data(data['correct_data_file'])
+        # self.read_correct_data(data['correct_data_file'])
+
+    def run(self):
         # self.read_old_pdf()
+        # while True:
+        self.read_correct_data(self.correct_data_file)
         self.create_new_pdf()
 
     def read_correct_data(self, file_name):
@@ -49,6 +53,8 @@ class Bot():
             df = pd.read_excel(
                 file_name)
             self.correct_data_file = file_name
+            self.LIMS_ID = str(int(df.values[0][2]))
+            print('LIMS ID :', self.LIMS_ID)
             sub_df = df.iloc[10:23, [16, 32, 31, 20]]
             self.correctData = sub_df.to_numpy()
             print('I read the {} file successfully'.format(file_name))
@@ -84,6 +90,7 @@ class Bot():
         height = 504
         height_gap = 12
         xPositions = [165, 369, 413, 458]
+        LIMS_ID_positions = [380, 625, 40, 18]
 
         packet = io.BytesIO()
         can = canvas.Canvas(packet, pagesize=letter)
@@ -91,6 +98,8 @@ class Bot():
         can.setStrokeColorRGB(1, 1, 1)
         can.setFillColorRGB(1, 1, 1)
         can.rect(10, 330, 600, 220, fill=1)
+        can.rect(LIMS_ID_positions[0], LIMS_ID_positions[1],
+                 LIMS_ID_positions[2], LIMS_ID_positions[3], fill=1)
         # insert image
         mask = [255, 255, 255, 255, 255, 255]
         can.drawImage('images/table_image.png', x=268, y=327,
@@ -108,6 +117,10 @@ class Bot():
             TTFont('helvari', 'fonts/helvari.ttf'))
         pdfmetrics.registerFont(
             TTFont('mytupi', 'fonts/mytupi.ttf'))
+
+        can.setFont("altehaasgrotesk", 9)
+        can.drawString(LIMS_ID_positions[0]+7,
+                       LIMS_ID_positions[1]+6, self.LIMS_ID)
         can.line(xPositions[0], height, 482, height)
         can.setFont("altehaasgroteskbold", 8)
         can.drawString(xPositions[0]+1, height+3, "Analyte")
@@ -165,7 +178,7 @@ class Bot():
     def getCorrectData(self, title, title_type='normal'):
         returnList = ['', '', '']
         for correct_data in self.correctData:
-            print(correct_data)
+            # print(correct_data)
             keyValue = re.sub(r"\s+$", "", correct_data[0])[-5:]
             if title_type == 'normal':
                 keyValue += ')'
@@ -176,7 +189,7 @@ class Bot():
                 returnList[1] = str(round(float(correct_data[2]), 3))
                 if returnList[1] == '0.0':
                     returnList[1] = 'ND'
-                returnList[2] = str(round(float(correct_data[2]*10), 2))
+                returnList[2] = str(round(float(correct_data[3]), 3))
                 if returnList[2] == '0.0':
                     returnList[2] = 'ND'
 
@@ -190,6 +203,7 @@ def main():
         "old_pdf_file": old_pdf_file
     }
     my_bot = Bot(data)
+    my_bot.run()
 
 
 if __name__ == '__main__':
