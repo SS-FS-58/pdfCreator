@@ -9,6 +9,7 @@ from io import StringIO
 
 from PyPDF2 import PdfFileWriter, PdfFileReader
 import io
+import os
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfbase import pdfmetrics
@@ -17,7 +18,8 @@ from datetime import date
 # import tabula
 
 correct_data_file = "35482.xlsx"
-old_pdf_file = "NCAL Draft Plant Material CoA.pdf"
+old_pdf_file = "test_original_35656.pdf"
+password = "chimichangasandtacos"
 titleList = [
     '',
     'Tetrahydrocannabinolic acid (THCA)',
@@ -77,7 +79,15 @@ class Bot():
         print("Reading original Pdf file:{}.".format(file_name))
         try:
             pdfReader = PdfFileReader(
-                open(file_name, "rb"))
+                open(file_name, "r"))
+            if pdfReader.isEncrypted:
+                try:
+                    pdfReader.decrypt(password)
+                except NotImplementedError:
+                    command = f"qpdf --password='{password}' --decrypt {file_name} {file_name+'_decrypt'};"
+                    os.system(command)
+                    with open(file_name+'_decrypt', mode='rb') as fp:
+                        pdfReader = PdfFileReader(fp)
             self.old_pdf_file = file_name
             print('I read the {} file successfully'.format(file_name))
             return pdfReader
