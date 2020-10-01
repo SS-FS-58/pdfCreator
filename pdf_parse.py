@@ -1,10 +1,10 @@
 import pandas as pd
 import re
-from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
-from pdfminer.converter import HTMLConverter
-# from pdfminer.converter import TextConverter
-from pdfminer.layout import LAParams
-from pdfminer.pdfpage import PDFPage
+# from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
+# from pdfminer.converter import HTMLConverter
+# # from pdfminer.converter import TextConverter
+# from pdfminer.layout import LAParams
+# from pdfminer.pdfpage import PDFPage
 from io import StringIO
 
 from PyPDF2 import PdfFileWriter, PdfFileReader
@@ -18,7 +18,7 @@ from datetime import date
 # import tabula
 
 correct_data_file = "35482.xlsx"
-old_pdf_file = "test_original_35656.pdf"
+old_pdf_file = "0073potency_blank.pdf"
 password = "chimichangasandtacos"
 titleList = [
     '',
@@ -79,7 +79,7 @@ class Bot():
         print("Reading original Pdf file:{}.".format(file_name))
         try:
             pdfReader = PdfFileReader(
-                open(file_name, "r"))
+                open(file_name, "rb"))
             if pdfReader.isEncrypted:
                 try:
                     pdfReader.decrypt(password)
