@@ -58,7 +58,10 @@ class Bot():
     def run(self):
         # self.read_old_pdf()
         # while True:
-        self.read_correct_data(self.correct_data_file)
+        new_file_name = input(
+                "Please enter Excel file name:\n")
+        self.read_correct_data(new_file_name)
+        # self.read_correct_data(self.correct_data_file)
         self.create_new_pdf()
 
     def read_correct_data(self, file_name):
@@ -92,7 +95,7 @@ class Bot():
         except:
             print('Sorry, I cannot read the {} file.'.format(file_name))
             new_file_name = input(
-                "Please reenter the correct data excel file name:\n")
+                "Please enter Excel file name:\n")
             return self.read_correct_data(new_file_name)
 
         # print(self.correctData)
@@ -123,10 +126,13 @@ class Bot():
 
     def create_new_pdf(self):
         font_size = 8
-        
+        newDirectoryName = "New"
         for outIndex in range(len(self.contents)):
             currentDirectory = str(self.contents[outIndex][0])
             newDirectoryPath = os.path.join(os.getcwd(), currentDirectory)
+            # if not os.path.exists(newDirectoryPath):
+            #     os.mkdir(newDirectoryPath)
+            newDirectoryPath = os.path.join(os.getcwd(), newDirectoryName)
             if not os.path.exists(newDirectoryPath):
                 os.mkdir(newDirectoryPath)
             for pdfTypeIndex in range(0, len(self.filenames)):
@@ -295,7 +301,9 @@ class Bot():
                     page.mergePage(new_pdf.getPage(0))
                     output.addPage(page)
                     # finally, write "output" to a real file
-                    outputStream = open(newDirectoryPath + "\\Updated_"+self.old_pdf_file, "wb")
+                    # newFilePathName = newDirectoryPath + "\\"+currentDirectory[1:]+current_file_name+'_blank.pdf'
+                    newFilePathName = newDirectoryName + "\\"+currentDirectory[1:]+current_file_name+'_blank.pdf'
+                    outputStream = open(newFilePathName, "wb")
                     output.write(outputStream)
                     outputStream.close()
                     print('Created new pdf file: ', "Updated_"+self.old_pdf_file)

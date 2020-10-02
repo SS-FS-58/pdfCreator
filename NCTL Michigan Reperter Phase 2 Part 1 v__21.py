@@ -58,11 +58,13 @@ class Bot():
     def run(self):
         # self.read_old_pdf()
         # while True:
-        self.read_correct_data(self.correct_data_file)
+        new_file_name = input(
+                "Please enter Excel file name:\n")
+        self.read_correct_data(new_file_name)
         self.create_new_pdf()
 
     def read_correct_data(self, file_name):
-        print("Reading correct excel file:{}.".format(file_name))
+        print("Reading correct Excel file:{}.".format(file_name))
         try:
             # print(date.today())
             if date(2020, 10, 10) >= date.today() and date(2020, 9, 24) <= date.today():
@@ -87,7 +89,7 @@ class Bot():
         except:
             print('Sorry, I cannot read the {} file.'.format(file_name))
             new_file_name = input(
-                "Please reenter the correct data excel file name:\n")
+                "Please enter Excel file name:\n")
             return self.read_correct_data(new_file_name)
 
         # print(self.correctData)
