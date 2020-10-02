@@ -168,7 +168,7 @@ class Bot():
             height_gap = 8.55
             font_size = 7
             middle_rows = 29
-            xPositions = [124, 213, 405, 494]
+            xPositions = [213, 124, 494, 405]
 
             packet = io.BytesIO()
             can = canvas.Canvas(packet, pagesize=letter)
