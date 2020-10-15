@@ -17,8 +17,8 @@ from reportlab.pdfbase.ttfonts import TTFont
 from datetime import date
 # import tabula
 
-correct_data_file = "35482.xlsx"
-old_pdf_file = "0073potency_blank.pdf"
+correct_data_file = "36740.xlsx"
+old_pdf_file = "NCAL Tincture Potency - Example COA.pdf"
 password = "chimichangasandtacos"
 titleList = [
     '',
@@ -54,7 +54,7 @@ class Bot():
         print("Reading correct excel file:{}.".format(file_name))
         try:
             # print(date.today())
-            if date(2020, 10, 1) >= date.today() and date(2020, 9, 24) <= date.today():
+            if date(2020, 10, 31) >= date.today() and date(2020, 9, 24) <= date.today():
                 pass
             else:
                 return False
